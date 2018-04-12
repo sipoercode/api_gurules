@@ -1,0 +1,143 @@
+$phql="SELECT a.schedule_days, a.schedule_times, b.user_id, b.full_name, b.birthday, b.gender, b.address, b.city, b.provinces, b.districts, b.villages, (SELECT SUM(c.rating)/COUNT(c.teacher_id) FROM rating as c WHERE c.teacher_id=a.id_teachers) as ratings FROM prf_teachers as a, schedules as b, rating as c WHERE b.schedule_days = "Rabu" AND b.schedule_times LIKE "%13:30 - 15:00%" AND a.user_id=b.user_id
+			GROUP BY a.user_id";
+		$phql 	= "SELECT a.schedule_days, a.schedule_times, b.user_id, b.full_name, b.birthday, b.gender, b.address, b.city, b.provinces, b.districts, b.villages, SUM(c.rating)/COUNT(c.teacher_id) as ratings FROM Schedules as a, PrfTeachers as b, Rating as c WHERE a.schedule_days = :days: AND a.schedule_times LIKE :tims: AND a.user_id = b.user_id AND c.teacher_id = b.id_teachers ORDER BY $orderby LIMIT $pages, $limit";
+
+		$phql = "SELECT prf_teachers.full_name, prf_teachers.birthday, prf_teachers.address, prf_teachers.city, prf_teachers.provinces, prf_teachers.districts, prf_teachers.villages, education_background.primary_school, education_background.junior_high_school, education_background.senior_high_school, education_background.diploma, education_background.s1, education_background.s2, education_background.s3, radius_locations.city, radius_locations.district FROM PrfTeachers INNER JOIN EducationBackground ON PrfTeachers.id_teachers = EducationBackground.teacher_id INNER JOIN RadiusLocations ON PrfTeachers.id_teachers = RadiusLocations.radius_id";
+
+		$joins =  $app->Modelsmanager->executeQuery($phql);
+
+		$data = array();
+		foreach ($joins as $join) {
+			$data[] = array(
+				"full_name" => $join->full_name,
+				"birthday" => $join->birthday,
+				"address" => $join->address,
+				"city" => $join->city,
+				"provinces" => $join->provinces,
+				"districts" => $join->districts,
+				"villages" => $join->villages,
+				"primary_school" => $join->primary_school,
+				"junior_high_school" => $join->junior_high_school,
+				"senior_high_school" => $join->senior_high_school,
+				"diploma" => $join->diploma,
+				"s1" => $join->s1,
+				"s2" => $join->s2,
+				"s3" => $join->s3,
+				"city" => $join->city,
+				"district" => $join->district
+			);
+		}
+		// third
+		echo json_encode($data);
+	});
+
+	#education
+	$this->hasManyToMany(
+            "id",
+            "PrfTeacher",
+            "id_teachers", "user_id",
+            "RadiusLocations",
+            "user_id"
+        );
+
+    #radius
+    $this->hasMany("user_id", "PrfTeachers", "user_id");
+
+    #prfteacher
+    $this->belongsTo("id_teachers", "EducationBackground", "id");
+    $this->belongsTo("user_id", "RadiusLocations", "user_id");
+
+    full_name, birthday, address, PrfTeachers.city, provinces, districts, villages, primary_school, junior_high_school, senior_high_school, diploma, s1, s2, s3, RadiusLocations.city, district
+
+    http://demos.suckittrees.com/
+    http://antzstudioblog.blogspot.co.id/search/label/phalcon%20framework
+    https://codepen.io/pen
+    http://plugins.krajee.com/checkbox-x
+    https://idjs.github.io/belajar-nodejs/nodejs/index.html
+    http://www.w3ii.com/id/phalcon/phalcon_query_language.html
+    https://dzikrafathintech.blogspot.co.id/2016/10/mengamankan-jaringan-dengan-access.html
+
+    $user = $app->request->getJsonRawBody();
+
+		$post = $this->request->getPost();
+		$username = $post['username'];
+		$password = $post['password'];
+
+		$users = Users::findFirst(["conditions" => "username = '$username'"]);
+
+		$response = new Response();
+
+		if (hash($password==$users->password)) {
+
+			$response->setJsonContent(
+				[
+					"status" => "Login"
+				]
+			);
+
+		} else {
+
+			$response->setStatusCode(409, "Conflict");
+
+			$errors = [];
+
+			foreach ($status->getMessages() as $message) {
+				$errors[] = $message->getMessage();
+			}
+
+			$response->setJsonContent(
+				[
+					"status"   => "ERROR",
+					"messages" => $errors,
+				]
+			);
+		}
+		return $response;
+
+		2017-08-22 16:47:45	
+		2017-08-21 17:01:09	
+
+		2017-08-22 16:47:45
+		2017-08-21 22:58:13
+
+				'id'  => $id,
+				'teacher_id' => $rating->teacher_id,
+				'student_id'        => $rating->student_id,
+				'rating'        => $rating->rating,
+				'rating_date'        => $rating->rating_date,
+				'rating_comments'        => $rating->rating_comments,
+				'id_teachers'        => $rating->id_teachers,
+				'user_id'        => $rating->user_id,
+				'full_name'        => $rating->full_name,
+				'birthday'        => $rating->birthday,
+				'gender'        => $rating->gender,
+				'current_job'        => $rating->current_job,
+				'descriptions'        => $rating->descriptions,
+				'address'        => $rating->address,
+				'city'        => $rating->city,
+				'provinces'        => $rating->provinces,
+				'districts'        => $rating->districts,
+				'villages'        => $rating->villages,
+
+				$phql = "SELECT r.*, t.* FROM Rating as r, PrfStudents as s,  PrfTeachers as t WHERE r.student_id=s.user_id AND r.teacher_id =  t.user_id AND r.student_id=:id:";
+
+
+				
+	$phql = "UPDATE PrfTeachers SET user_id = :user_id:, full_name = :full_name:, birthday = :birthday:, gender = :gender:, current_job = :current_job:, descriptions = :descriptions:, address = :address:, city = :city:, provinces = :provinces:, districts = :districts:, villages = :villages: WHERE id_teachers = :id:";
+
+	$phql1 = "UPDATE EducationBackground SET teacher_id = :teacher_id:, primary_school = :primary_school:, junior_high_school = :junior_high_school:, senior_high_school = :senior_high_school:, diploma = :diploma:, s1 = :s1:, s2 = :s2:, s3 = :s3: WHERE id = :ids:";
+
+	UPDATE prf_teachers INNER JOIN education_background ON education_background.id=prf_teachers.id_teachers SET prf_teachers.user_id='1', prf_teachers.full_name='furwadi giyono', prf_teachers.birthday='12-09-1997', prf_teachers.gender='L', prf_teachers.current_job='Programmer', prf_teachers.descriptions='Pemuda Pekalongan', prf_teachers.address='Kajen', prf_teachers.city='Kajen', prf_teachers.provinces='Jawa Tengah', prf_teachers.districts='Kajen', prf_teachers.villages='Kajen', education_background.teacher_id='3', education_background.primary_school='SD N 01 Kajen', education_background.junior_high_school='SMP N 1 Kajen', education_background.senior_high_school='SMA N 1 Kajen', education_background.diploma='-', education_background.s1='-', education_background.s2='-', education_background.s3='-' WHERE prf_teachers.id_teachers=3;
+
+	http://antzstudioblog.blogspot.co.id/search/label/phalcon%20framework
+	https://codepen.io/pen
+	http://plugins.krajee.com/checkbox-x
+	https://idjs.github.io/belajar-nodejs/nodejs/index.html
+	http://www.w3ii.com/id/phalcon/phalcon_query_language.html
+	https://dzikrafathintech.blogspot.co.id/2016/10/mengamankan-jaringan-dengan-access.html
+	https://www.petanikode.com/github-ssh/
+	https://belajarphp.net/belajar-framework-codeigniter/
+	http://www.malasngoding.com/cara-membuat-pagination-pada-codeigniter/
+	https://medium.com/@atchlnd/uploading-multiple-files-with-phalcon-php-and-html5-540ecd28367d?fref=gc
+	http://raitosun.blogspot.co.id/2011/03/penggunaan-group-by-dan-having-pada-sql.html
+	
